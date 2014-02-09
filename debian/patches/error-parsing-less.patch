@@ -1,0 +1,15 @@
+Description: xzless: Make "less -V" parsing more robust
+Origin: lp:~chilicuil/ubuntu/trusty/xz-utils/fix-1248044
+Bug-Ubuntu: https://launchpad.net/bugs/1248044
+
+--- a/src/scripts/xzless.in
++++ b/src/scripts/xzless.in
+@@ -46,7 +46,7 @@ if test "${LESSMETACHARS+set}" != set; t
+ 	LESSMETACHARS="$space$tab$nl'"';*?"()<>[|&^`#\$%=~'
+ fi
+ 
+-if test "$(less -V | { read ver && echo ${ver#less }; })" -ge 429; then
++if test "$(less -V | { read ver && ver=${ver#less } && echo ${ver%% *}; })" -ge 429; then
+ 	# less 429 or later: LESSOPEN pipe will be used on
+ 	# standard input if $LESSOPEN begins with |-.
+ 	LESSOPEN="|-$xz -cdfq -- %s"
